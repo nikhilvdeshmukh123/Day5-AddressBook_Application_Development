@@ -12,12 +12,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class AddressbookExceptionHandler {
+public class AddressBookExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ResponseDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
         List<ObjectError> errorList = exception.getBindingResult().getAllErrors();
         List<String> errMesg = errorList.stream().map(objErr -> objErr.getDefaultMessage()).collect(Collectors.toList());
         ResponseDto responseDto = new ResponseDto("Exception while processing REST request", errMesg);
+        return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AddressBookException.class)
+    public ResponseEntity<ResponseDto> handleEmployeePayrollException(AddressBookException exception){
+        ResponseDto responseDto = new ResponseDto("Exception while processing REST Request", exception.getMessage());
         return new ResponseEntity<ResponseDto>(responseDto, HttpStatus.BAD_REQUEST);
     }
 }
