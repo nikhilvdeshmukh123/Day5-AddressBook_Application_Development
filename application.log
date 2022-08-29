@@ -3,3 +3,8 @@
 2022-08-29 19:57:28.681  INFO 7224 --- [restartedMain] c.b.a.AddressBookAppApplication          : No active profile set, falling back to 1 default profile: "default"
 2022-08-29 19:57:32.768  WARN 7224 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 2022-08-29 19:57:33.255  INFO 7224 --- [restartedMain] c.b.a.AddressBookAppApplication          : Started AddressBookAppApplication in 5.236 seconds (JVM running for 6.766)
+2022-08-29 20:13:28.860  INFO 4192 --- [restartedMain] c.b.a.AddressBookAppApplication          : Starting AddressBookAppApplication using Java 17.0.2 on BlazeOp13 with PID 4192 (E:\CFP_Batch\Projects\AddressBookApp\target\classes started by SAI in E:\CFP_Batch\Projects\AddressBookApp)
+2022-08-29 20:13:28.870 DEBUG 4192 --- [restartedMain] c.b.a.AddressBookAppApplication          : Running with Spring Boot v2.7.3, Spring v5.3.22
+2022-08-29 20:13:28.871  INFO 4192 --- [restartedMain] c.b.a.AddressBookAppApplication          : The following 1 profile is active: "dev"
+2022-08-29 20:13:36.122  WARN 4192 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2022-08-29 20:13:36.735  INFO 4192 --- [restartedMain] c.b.a.AddressBookAppApplication          : Started AddressBookAppApplication in 9.167 seconds (JVM running for 12.481)
