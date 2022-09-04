@@ -11,4 +11,7 @@ public interface AddressBookService {
     Person createAddressBookDetails(AddressBookDto addressBookDto);
     Person updateAddressBookDetails(int personId, AddressBookDto addressBookDto);
     void deleteAddressDetails(int personId);
+
+    List<Person> sortContactsByCityOrderBy();
+    List<Person> sortContactsByState(String state);
 }

@@ -21,7 +21,7 @@ public class AddressBookServiceImpl implements AddressBookService {
 
     @Override
     public List<Person> getAddressBookDetails() {
-        return personList;
+        return addressBookRepository.findAll();
     }
 
     @Override
@@ -44,22 +44,23 @@ public class AddressBookServiceImpl implements AddressBookService {
     @Override
     public Person updateAddressBookDetails(int personId, AddressBookDto addressBookDto) {
         Person personDetails = this.getAddressDetailsById(personId);
-        personDetails.setFirstName(addressBookDto.firstName);
-        personDetails.setLastName(addressBookDto.lastName);
-        personDetails.setGender(addressBookDto.gender);
-        personDetails.setAddress(addressBookDto.address);
-        personDetails.setCity(addressBookDto.city);
-        personDetails.setState(addressBookDto.state);
-        personDetails.setZipCode(addressBookDto.zipCode);
-        personDetails.setEmailId(addressBookDto.emailId);
-        personDetails.setPhoneNumber(addressBookDto.phoneNumber);
-        personList.set(personId-1, personDetails);
-        return personDetails;
+        personDetails.updateAddressBookData(addressBookDto);
+        return addressBookRepository.save(personDetails);
     }
 
     @Override
     public void deleteAddressDetails(int personId) {
         Person personDetails = this.getAddressDetailsById(personId);
-        personList.remove(personDetails);
+        addressBookRepository.delete(personDetails);
+    }
+
+    @Override
+    public List<Person> sortContactsByCityOrderBy() {
+        return addressBookRepository.findContactsByCityOrderBy();
+    }
+
+    @Override
+    public List<Person> sortContactsByState(String state) {
+        return addressBookRepository.sortContactByState(state);
     }
 }
