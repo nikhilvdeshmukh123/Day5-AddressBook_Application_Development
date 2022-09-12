@@ -1,66 +1,107 @@
 package com.bridgelabz.addressbookapp.service;
 
-import com.bridgelabz.addressbookapp.dto.AddressBookDto;
-import com.bridgelabz.addressbookapp.entity.Person;
+import com.bridgelabz.addressbookapp.dto.AddressBookDTO;
+import com.bridgelabz.addressbookapp.dto.ResponseDTO;
+import com.bridgelabz.addressbookapp.entity.AddressBookData;
 import com.bridgelabz.addressbookapp.exception.AddressBookException;
 import com.bridgelabz.addressbookapp.repository.AddressBookRepository;
+import com.bridgelabz.addressbookapp.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class AddressBookServiceImpl implements AddressBookService {
 
     @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
     private AddressBookRepository addressBookRepository;
-    private List<Person> personList = new ArrayList<>();
+    private List<AddressBookData> list = new ArrayList<>();
 
     @Override
-    public List<Person> getAddressBookDetails() {
-        return addressBookRepository.findAll();
+    public List<AddressBookData> getAddressBookData(String token) {
+        Long userId = jwtUtil.decodeToken(token);
+        Optional<AddressBookData> isUserPresent = addressBookRepository.findById(userId);
+        if (isUserPresent.isPresent()) {
+            return addressBookRepository.findAll();
+        }
+        throw new AddressBookException("User not present");
+
     }
 
     @Override
-    public Person getAddressDetailsById(int personId) {
-        return getAddressBookDetails().stream()
-                .filter(personData -> personData.getPersonId() == personId)
-                .findFirst()
-                .orElseThrow(() -> new AddressBookException("Person Not Found"));
+    public AddressBookData getAddressBookDataById(long personId) {
+        return addressBookRepository.findById(personId)
+                .orElseThrow(() -> new AddressBookException("User Not Found"));
     }
 
     @Override
-    public Person createAddressBookDetails(AddressBookDto addressBookDto) {
-        Person person = null;
-        person = new Person( addressBookDto);
-        personList.add(person);
-        log.debug("Person data: " + person.toString());
-        return addressBookRepository.save(person);
+    public List<AddressBookData> getPersonByFirstName(String firstName) {
+        return addressBookRepository.findByFirstName(firstName);
     }
 
     @Override
-    public Person updateAddressBookDetails(int personId, AddressBookDto addressBookDto) {
-        Person personDetails = this.getAddressDetailsById(personId);
-        personDetails.updateAddressBookData(addressBookDto);
-        return addressBookRepository.save(personDetails);
+    public List<AddressBookData> getPersonByLastName(String lastName) {
+        return addressBookRepository.findByLastName(lastName);
+    }
+
+    public Optional<AddressBookData> getPersonByEmailId(String emailId) {
+        return addressBookRepository.findByEmailId(emailId);
     }
 
     @Override
-    public void deleteAddressDetails(int personId) {
-        Person personDetails = this.getAddressDetailsById(personId);
-        addressBookRepository.delete(personDetails);
+    public AddressBookData createAddressBookData(AddressBookDTO addressBookDTO) {
+        AddressBookData addressBookData = null;
+        String encodedPassword = bCryptPasswordEncoder.encode(addressBookDTO.getPassword());
+        addressBookDTO.setPassword(encodedPassword);
+        addressBookData = new AddressBookData(addressBookDTO);
+        log.debug("User Data: " + addressBookData.toString());
+        return addressBookRepository.save(addressBookData);
     }
 
     @Override
-    public List<Person> sortContactsByCityOrderBy() {
+    public AddressBookData updateAddressBookData(int personId, AddressBookDTO addressBookDTO) {
+        AddressBookData addressBookData = this.getAddressBookDataById(personId);
+        addressBookData.updateAddressBookData(addressBookDTO);
+        return addressBookRepository.save(addressBookData);
+    }
+
+    @Override
+    public void deleteAddressBookData(int personId) {
+        AddressBookData addressBookData = this.getAddressBookDataById(personId);
+        addressBookRepository.delete(addressBookData);
+    }
+
+    @Override
+    public ResponseDTO login(String emailId, String password) {
+        Optional<AddressBookData> isEmailPresent = addressBookRepository.findByEmailId(emailId);
+        if (isEmailPresent.isPresent()) {
+            if (bCryptPasswordEncoder.matches(password, isEmailPresent.get().getPassword())) {
+                String token = jwtUtil.createToken(isEmailPresent.get().getPersonId());
+                return new ResponseDTO("User has logged In", 200, token);
+            } else {
+                throw new AddressBookException("Password wrong");
+            }
+        }
+        throw new AddressBookException("No Contact Found");
+    }
+
+    @Override
+    public List<AddressBookData> sortContactsByCityOrderBy() {
         return addressBookRepository.findContactsByCityOrderBy();
     }
 
     @Override
-    public List<Person> sortContactsByState(String state) {
+    public List<AddressBookData> sortContactsByState(String state) {
         return addressBookRepository.sortContactByState(state);
     }
 }
