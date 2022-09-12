@@ -7,6 +7,7 @@ import com.bridgelabz.addressbookapp.exception.AddressBookException;
 import com.bridgelabz.addressbookapp.repository.AddressBookRepository;
 import com.bridgelabz.addressbookapp.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,9 @@ public class AddressBookServiceImpl implements AddressBookService {
     private JwtUtil jwtUtil;
     @Autowired
     private AddressBookRepository addressBookRepository;
+    @Autowired
+    private ModelMapper modelMapper;
+
     private List<AddressBookData> list = new ArrayList<>();
 
     @Override
@@ -63,7 +67,8 @@ public class AddressBookServiceImpl implements AddressBookService {
         AddressBookData addressBookData = null;
         String encodedPassword = bCryptPasswordEncoder.encode(addressBookDTO.getPassword());
         addressBookDTO.setPassword(encodedPassword);
-        addressBookData = new AddressBookData(addressBookDTO);
+        addressBookData = modelMapper.map(addressBookDTO, AddressBookData.class);
+//        addressBookData = new AddressBookData(addressBookDTO);
         log.debug("User Data: " + addressBookData.toString());
         return addressBookRepository.save(addressBookData);
     }
@@ -71,7 +76,8 @@ public class AddressBookServiceImpl implements AddressBookService {
     @Override
     public AddressBookData updateAddressBookData(int personId, AddressBookDTO addressBookDTO) {
         AddressBookData addressBookData = this.getAddressBookDataById(personId);
-        addressBookData.updateAddressBookData(addressBookDTO);
+        modelMapper.map(addressBookDTO, addressBookData);
+//        addressBookData.updateAddressBookData(addressBookDTO);
         return addressBookRepository.save(addressBookData);
     }
 

@@ -41,21 +41,21 @@ public class AddressBookData {
 
     }
 
-    public AddressBookData(AddressBookDTO addressBookDTO) {
-        this.updateAddressBookData(addressBookDTO);
-    }
-
-    public void updateAddressBookData(AddressBookDTO addressBookDTO) {
-        this.firstName = addressBookDTO.firstName;
-        this.lastName = addressBookDTO.lastName;
-        this.gender = addressBookDTO.gender;
-        this.address = addressBookDTO.address;
-        this.city = addressBookDTO.city;
-        this.state = addressBookDTO.state;
-        this.zipCode = addressBookDTO.zipCode;
-        this.phoneNumber = addressBookDTO.phoneNumber;
-        this.emailId = addressBookDTO.emailId;
-        this.password = addressBookDTO.password;
-    }
+//    public AddressBookData(AddressBookDTO addressBookDTO) {
+//        this.updateAddressBookData(addressBookDTO);
+//    }
+//
+//    public void updateAddressBookData(AddressBookDTO addressBookDTO) {
+//        this.firstName = addressBookDTO.firstName;
+//        this.lastName = addressBookDTO.lastName;
+//        this.gender = addressBookDTO.gender;
+//        this.address = addressBookDTO.address;
+//        this.city = addressBookDTO.city;
+//        this.state = addressBookDTO.state;
+//        this.zipCode = addressBookDTO.zipCode;
+//        this.phoneNumber = addressBookDTO.phoneNumber;
+//        this.emailId = addressBookDTO.emailId;
+//        this.password = addressBookDTO.password;
+//    }
 
 }
