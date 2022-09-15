@@ -27,6 +27,8 @@ public class AddressBookServiceImpl implements AddressBookService {
     @Autowired
     private AddressBookRepository addressBookRepository;
     @Autowired
+    private MailService mailService;
+    @Autowired
     private ModelMapper modelMapper;
 
     private List<AddressBookData> list = new ArrayList<>();
@@ -70,6 +72,9 @@ public class AddressBookServiceImpl implements AddressBookService {
         addressBookData = modelMapper.map(addressBookDTO, AddressBookData.class);
 //        addressBookData = new AddressBookData(addressBookDTO);
         log.debug("User Data: " + addressBookData.toString());
+        String body = "Contact added successfully with Id is " + addressBookData.getPersonId();
+        String subject = "Contact registration successfull";
+        mailService.send(addressBookData.getEmailId(),body,subject);
         return addressBookRepository.save(addressBookData);
     }
 
